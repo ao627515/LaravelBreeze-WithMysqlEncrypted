@@ -1,66 +1,158 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# LaravelBreeze-WithMysqlEncrypted
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**LaravelBreeze-WithMysqlEncrypted** est un projet basé sur Laravel qui utilise le chiffrement MySQL pour sécuriser les informations sensibles telles que les adresses e-mail et les mots de passe. Ce projet est conçu pour démontrer l'intégration du chiffrement MySQL avec Laravel Breeze et la manière dont les données sont protégées à l'aide de la méthode `AES_ENCRYPT` et `AES_DECRYPT`.
 
-## About Laravel
+## Fonctionnalités
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   Utilisation de Laravel Breeze pour les fonctionnalités d'authentification.
+-   Chiffrement des colonnes `email` et `password` dans la table `users` à l'aide de MySQL.
+-   Mutateurs et accesseurs personnalisés pour le chiffrement et le déchiffrement des données.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Prérequis
 
-## Learning Laravel
+Assure-toi d'avoir les éléments suivants installés sur ton système :
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   PHP >= 8.1
+-   Composer
+-   MySQL
+-   Node.js et NPM (pour les assets frontend)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Cloner le dépôt
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Clone le dépôt du projet depuis GitHub :
 
-## Laravel Sponsors
+```bash
+git clone https://github.com/ton-utilisateur/laravelbreeze-withmysqlencrypted.git
+cd laravelbreeze-withmysqlencrypted
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Installer les dépendances PHP
 
-### Premium Partners
+Installe les dépendances PHP du projet avec Composer :
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```bash
+composer install
+```
 
-## Contributing
+### Installer Laravel Breeze
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Pour installer Laravel Breeze, exécute la commande suivante :
 
-## Code of Conduct
+```bash
+php artisan breeze:install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Cette commande va installer les vues d'authentification de base et les routes nécessaires. Ensuite, tu dois compiler les assets frontend :
 
-## Security Vulnerabilities
+```bash
+npm install && npm run dev
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Configurer la base de données
 
-## License
+Crée une base de données MySQL pour le projet, puis configure les paramètres de connexion dans le fichier `.env`. Voici un exemple de configuration :
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+DB_ENCRYPTION_KEY=your_encrypted_key
+```
+
+### Exécuter les migrations
+
+Applique les migrations pour créer les tables nécessaires dans la base de données :
+
+```bash
+php artisan migrate
+```
+
+### Lancer le serveur de développement
+
+Démarre le serveur de développement Laravel :
+
+```bash
+php artisan serve
+```
+
+Le projet sera accessible à l'adresse [http://localhost:8000](http://localhost:8000).
+
+## Fonctionnalités
+
+### Modifications de la base de données
+
+La migration pour la table `users` a été modifiée pour utiliser des colonnes de type BLOB pour les e-mails et les mots de passe. Voici la structure modifiée de la table :
+
+```php
+Schema::create('users', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->binary('email')->unique();
+    $table->timestamp('email_verified_at')->nullable();
+    $table->binary('password');
+    $table->rememberToken();
+    $table->timestamps();
+});
+```
+
+### Configuration de l'environnement
+
+Ajoute la clé de chiffrement dans ton fichier `.env` :
+
+```env
+DB_ENCRYPTION_KEY=your_encrypted_key
+```
+
+### Modèle Eloquent
+
+Le modèle `User` a été modifié pour inclure des mutateurs et des accesseurs pour le chiffrement et le déchiffrement :
+
+```php
+public function setEmailAttribute($value)
+{
+    $this->attributes['email'] = DB::raw("AES_ENCRYPT('{$value}', '" . env('DB_ENCRYPTION_KEY') . "')");
+}
+
+public function setPasswordAttribute($value)
+{
+    $this->attributes['password'] = DB::raw("AES_ENCRYPT('{$value}', '" . env('DB_ENCRYPTION_KEY') . "')");
+}
+
+public function getEmailAttribute($value)
+{
+    return DB::selectOne("SELECT AES_DECRYPT('{$value}', '" . env('DB_ENCRYPTION_KEY') . "') AS email")->email;
+}
+
+public function getPasswordAttribute($value)
+{
+    return DB::selectOne("SELECT AES_DECRYPT('{$value}', '" . env('DB_ENCRYPTION_KEY') . "') AS password")->password;
+}
+```
+
+## Avantages et Inconvénients
+
+### Avantages
+
+-   **Sécurité renforcée :** Le chiffrement MySQL offre un niveau de sécurité pour les données sensibles stockées dans la base de données, en les protégeant contre les accès non autorisés.
+
+### Inconvénients
+
+-   **Complexité de mise en œuvre :** L'implémentation du chiffrement MySQL peut être complexe, surtout pour les débutants. Les mutateurs et accesseurs permettent de déchiffrer les données, mais cela nécessite des précautions supplémentaires pour s'assurer que les données sont correctement déchiffrées lors des requêtes.
+-   **Chiffrement non transparent pour les autres requêtes :** Les données chiffrées doivent être explicitement déchiffrées avant de pouvoir être utilisées dans des requêtes autres que celles du modèle. Cela peut nécessiter des ajustements supplémentaires dans la logique de l'application.
+
+## Observations
+
+Le chiffrement direct avec MySQL est une solution de sécurité fiable, mais son implémentation peut être complexe pour les débutants. Les mutateurs et accesseurs permettent de gérer le chiffrement et le déchiffrement des données de manière pratique, mais il est important de rester vigilant pour s'assurer que toutes les opérations de lecture et d'écriture manipulent correctement les données chiffrées. Assure-toi de bien comprendre les implications du chiffrement sur les performances et la gestion des données dans ton application.
+
+## Contribuer
+
+Les contributions sont les bienvenues ! Si tu souhaites améliorer ce projet, n'hésite pas à soumettre des pull requests ou à ouvrir des issues.
+
+## Licence
+
+Ce projet est sous licence [MIT](LICENSE).
