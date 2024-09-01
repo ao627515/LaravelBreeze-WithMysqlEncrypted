@@ -3,9 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -43,5 +44,27 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = DB::raw("AES_ENCRYPT('{$value}', '" . env('DB_ENCRYPTION_KEY') . "')");
+    }
+
+    // Chiffrer le mot de passe avant de sauvegarder
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = DB::raw("AES_ENCRYPT('{$value}', '" . env('DB_ENCRYPTION_KEY') . "')");
+    }
+
+    public function getEmailAttribute($value)
+    {
+        return DB::selectOne("SELECT AES_DECRYPT('{$value}', '" . env('DB_ENCRYPTION_KEY') . "') AS email")->email;
+    }
+
+    // Déchiffrer le mot de passe lors de la récupération
+    public function getPasswordAttribute($value)
+    {
+        return DB::selectOne("SELECT AES_DECRYPT('{$value}', '" . env('DB_ENCRYPTION_KEY') . "') AS password")->password;
     }
 }
